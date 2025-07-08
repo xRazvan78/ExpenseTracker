@@ -1,0 +1,54 @@
+﻿@page "/categories"
+@rendermode InteractiveServer
+
+<h3>Categories (@categories.Count)</h3>
+
+<ul>
+    @foreach (var category in categories)
+    {
+        <li>
+            <span>ID: @category.Id | Name: @category.Name</span>
+            <button @onclick="() => DeleteCategory(category.Id)">Delete</button>
+        </li>
+
+    }
+</ul>
+
+<input @bind="newCategoryName" placeholder="New category name" />
+<button @onclick="AddCategory">Add Category</button>
+
+@code {
+    private List<Category> categories = new()
+    {
+        new Category { Id = 1, Name = "Food" },
+        new Category { Id = 2, Name = "Housing" },
+        new Category { Id = 3, Name = "Entertainment" }
+    };
+
+    private string newCategoryName;
+
+    void AddCategory()
+    {
+        if (!string.IsNullOrWhiteSpace(newCategoryName))
+        {
+            var newId = categories.Max(c => c.Id) + 1;
+            categories.Add(new Category { Id = newId, Name = newCategoryName });
+            newCategoryName = string.Empty;
+        }
+    }
+
+    void DeleteCategory(int id)
+    {
+        var category = categories.FirstOrDefault(c => c.Id == id);
+        if (category != null)
+        {
+            categories.Remove(category);
+        }
+    }
+
+    public class Category
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+}
