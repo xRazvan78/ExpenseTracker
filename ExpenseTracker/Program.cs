@@ -1,10 +1,18 @@
 using ExpenseTracker.Components;
+using ExpenseTracker.Components.Data.Models;
+using ExpenseTracker.Components.Pages;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+builder.Services.AddRazorPages();
+builder.Services.AddServerSideBlazor();
+builder.Services.AddSingleton<Weather>();
+builder.Services.AddDbContext<ExpenseTrackerContext>(options =>
+options.UseNpgsql(builder.Configuration.GetConnectionString("ExpenseTrackerDatabase")));
 
 var app = builder.Build();
 
