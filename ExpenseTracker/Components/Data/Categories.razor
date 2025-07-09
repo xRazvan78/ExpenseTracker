@@ -1,51 +1,48 @@
 ﻿@page "/categories"
 @rendermode InteractiveServer
 @using ExpenseTracker.Services
-@using ExpenseTracker.Components.Data.Models;  
+@using ExpenseTracker.Components.Data.Models;
 @inject CategoryService Service;
 
 <h3>Categories (@categories.Count)</h3>
 
 <ul>
-    @foreach (var category in categories)
-    {
-        <li>
-            <span>ID: @category.Id | Name: @category.Name</span>
-            <button @onclick="() => DeleteCategory(category.Id)">Delete</button>
-        </li>
+	@foreach (var category in categories)
+	{
+		<li>
+			<span>ID: @category.Id | Name: @category.Name</span>
+			<button @onclick="() => DeleteCategory(category.Id)">Delete</button>
+		</li>
 
-    }
+	}
 </ul>
 
 <input @bind="newCategoryName" placeholder="New category name" />
 <button @onclick="AddCategory">Add Category</button>
 
 @code {
-    private List<Category> categories = new();
+	private List<Category> categories = new();
 
-    protected override void OnInitialized()
-    {
-        categories = Service.GetCategories();
-    }
+	protected override void OnInitialized()
+	{
+		categories = Service.GetCategories();
+	}
 
-    private string newCategoryName;
+	private string newCategoryName;
 
-    void AddCategory()
-    {
-        if (!string.IsNullOrWhiteSpace(newCategoryName))
-        {
-            var newId = categories.Max(c => c.Id) + 1;
-            categories.Add(new Category { Id = newId, Name = newCategoryName });
-            newCategoryName = string.Empty;
-        }
-    }
+	void AddCategory()
+	{
+		if (!string.IsNullOrWhiteSpace(newCategoryName))
+		{
+			Service.AddCategory(new Category { Name = newCategoryName });
+			categories = Service.GetCategories();
+			newCategoryName = string.Empty;
+		}
+	}
 
-    void DeleteCategory(int id)
-    {
-        var category = categories.FirstOrDefault(c => c.Id == id);
-        if (category != null)
-        {
-            categories.Remove(category);
-        }
-    }
+	void DeleteCategory(int id)
+	{
+		Service.DeleteCategory(id);
+		categories = Service.GetCategories();
+	}
 }

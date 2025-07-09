@@ -9,6 +9,9 @@ namespace ExpenseTracker.Components.Data.Models
 
         }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Expense> Expenses { get; set; }
+
+        public DbSet<Income> Incomes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,6 +25,14 @@ namespace ExpenseTracker.Components.Data.Models
                 new Category() { Id=6 ,Name="House"},
 
             });
+
+            modelBuilder.Entity<Expense>()
+                .Property(e => e.Planned)
+                .HasConversion<string>();
+
+            modelBuilder.Entity<Income>()
+                .Property(i => i.Type)
+                .HasConversion<string>();
         }
 
     }
