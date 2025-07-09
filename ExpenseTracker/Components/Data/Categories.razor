@@ -1,5 +1,8 @@
 ﻿@page "/categories"
 @rendermode InteractiveServer
+@using ExpenseTracker.Services
+@using ExpenseTracker.Components.Data.Models;  
+@inject CategoryService Service;
 
 <h3>Categories (@categories.Count)</h3>
 
@@ -18,12 +21,12 @@
 <button @onclick="AddCategory">Add Category</button>
 
 @code {
-    private List<Category> categories = new()
+    private List<Category> categories = new();
+
+    protected override void OnInitialized()
     {
-        new Category { Id = 1, Name = "Food" },
-        new Category { Id = 2, Name = "Housing" },
-        new Category { Id = 3, Name = "Entertainment" }
-    };
+        categories = Service.GetCategories();
+    }
 
     private string newCategoryName;
 
@@ -44,11 +47,5 @@
         {
             categories.Remove(category);
         }
-    }
-
-    public class Category
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
     }
 }
