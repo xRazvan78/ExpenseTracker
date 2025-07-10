@@ -1,0 +1,34 @@
+﻿@page "/expenses/new"
+@rendermode InteractiveServer
+@inject CategoryService CategoryService
+@inject ExpenseService ExpenseService
+@inject NavigationManager Nav
+@using ExpenseTracker.Components.Data.Models
+@using ExpenseTracker.Services
+
+<ExpenseForm Expense="@expense"
+             Categories="@categories"
+             IsEditMode="false"
+             OnSave="SaveExpense" />
+
+@code {
+    private Expense expense = new()
+    {
+        Date = DateTime.UtcNow
+    };
+
+    private List<Category> categories = new();
+
+    protected override void OnInitialized()
+    {
+        categories = CategoryService.GetCategories();
+    }
+
+    void SaveExpense()
+    {
+        ExpenseService.AddExpense(expense);
+        Nav.NavigateTo("/expenses");
+    }
+
+}
+

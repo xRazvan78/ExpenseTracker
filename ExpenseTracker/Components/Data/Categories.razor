@@ -9,7 +9,7 @@
 <ul>
 	@foreach (var category in categories)
 	{
-		<li>
+		<li style="margin-bottom: 1rem;">
 			<span>ID: @category.Id | Name: @category.Name</span>
 			<button @onclick="() => DeleteCategory(category.Id)">Delete</button>
 		</li>

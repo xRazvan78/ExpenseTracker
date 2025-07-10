@@ -1,0 +1,39 @@
+﻿@page "/expenses/{expenseId:int}"
+@rendermode InteractiveServer
+@inject ExpenseService ExpenseService
+@inject CategoryService CategoryService
+@inject NavigationManager Nav
+@using ExpenseTracker.Components.Data.Models
+@using ExpenseTracker.Services
+
+
+@if (expense != null)
+{
+    <ExpenseForm Expense="@expense"
+                 Categories="@categories"
+                 IsEditMode="true"
+                 OnSave="SaveChanges" />
+}
+else
+{
+    <p>Expense not found.</p>
+}
+
+@code {
+    [Parameter] public int expenseId { get; set; }
+
+    private Expense? expense;
+    private List<Category> categories = new();
+
+    protected override void OnInitialized()
+    {
+        expense = ExpenseService.GetExpenseData(expenseId);
+        categories = CategoryService.GetCategories();
+    }
+
+    void SaveChanges()
+    {
+        ExpenseService.UpdateExpenseDetails(expense!);
+        Nav.NavigateTo("/expenses");
+    }
+}

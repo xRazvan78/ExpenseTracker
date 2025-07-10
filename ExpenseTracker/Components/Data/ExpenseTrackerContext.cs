@@ -33,6 +33,11 @@ namespace ExpenseTracker.Components.Data.Models
             modelBuilder.Entity<Income>()
                 .Property(i => i.Type)
                 .HasConversion<string>();
+
+            modelBuilder.Entity<Expense>()
+                .Property(e => e.Date)
+                .HasColumnType("timestamp without time zone");
+
         }
 
     }
