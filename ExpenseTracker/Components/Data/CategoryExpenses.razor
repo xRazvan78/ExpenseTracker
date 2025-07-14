@@ -1,0 +1,38 @@
+﻿@page "/categories/{categoryId:int}/expenses"
+@rendermode InteractiveServer
+@using ExpenseTracker.Components.Data.Models
+@using ExpenseTracker.Services
+@inject ExpenseService ExpenseService
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Amount</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var expense in expenses)
+        {
+            <tr>
+                <td>@expense.Title</td>
+                <td>@expense.Amount</td>
+                <td>@expense.Date.ToString("dd/MM/yyyy")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+
+	[Parameter] public int categoryId { get; set; }
+    private List<Expense> expenses = new();
+
+    protected override void OnInitialized()
+    {
+        expenses = ExpenseService.GetExpensesByCategory(categoryId);
+    }
+
+}

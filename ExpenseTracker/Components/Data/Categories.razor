@@ -12,6 +12,7 @@
 		<li style="margin-bottom: 1rem;">
 			<span>ID: @category.Id | Name: @category.Name</span>
 			<button @onclick="() => DeleteCategory(category.Id)">Delete</button>
+			<a href="/categories/@category.Id/expenses" style="margin-left: 1rem;">View Expenses</a>
 		</li>
 
 	}

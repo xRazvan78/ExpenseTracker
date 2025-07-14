@@ -1,6 +1,7 @@
 ﻿using ExpenseTracker.Components.Data;
 using ExpenseTracker.Components.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 
 namespace ExpenseTracker.Services
 {
@@ -22,6 +23,8 @@ namespace ExpenseTracker.Services
 
         public Expense AddExpense(Expense expense)
         {
+            expense.Date = DateTime.SpecifyKind(expense.Date, DateTimeKind.Unspecified);
+
             _context.Expenses.Add(expense);
             _context.SaveChanges();
             return expense;
@@ -74,6 +77,15 @@ namespace ExpenseTracker.Services
             {
                 throw;
             }
+        }
+
+        public List<Expense> GetExpensesByCategory(int categoryId)
+        {
+            return _context.Expenses
+                .Include(e => e.Category)
+                .Where(e => e.CategoryId == categoryId)
+                .ToList();
+
         }
 
     }

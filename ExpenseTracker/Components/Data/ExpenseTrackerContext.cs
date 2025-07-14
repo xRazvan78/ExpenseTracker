@@ -38,6 +38,10 @@ namespace ExpenseTracker.Components.Data.Models
                 .Property(e => e.Date)
                 .HasColumnType("timestamp without time zone");
 
+            modelBuilder.Entity<Income>()
+                .Property(i => i.Date)
+                .HasColumnType("timestamp with time zone");
+
         }
 
     }

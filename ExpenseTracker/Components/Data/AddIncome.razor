@@ -1,0 +1,22 @@
+﻿@page "/incomes/new"
+@rendermode InteractiveServer
+@using ExpenseTracker.Components.Data.Models
+@using ExpenseTracker.Services
+@inject NavigationManager Nav
+@inject IncomeService IncomeService
+ 
+<IncomeForm Income="@income"
+            IsEditMode="false"
+            OnSave="SaveIncome" />
+
+@code {
+    private Income income = new() {
+        Date = DateTime.UtcNow
+    };
+
+    void SaveIncome()
+    {
+        IncomeService.AddIncome(income);
+        Nav.NavigateTo("/incomes");
+    }
+}

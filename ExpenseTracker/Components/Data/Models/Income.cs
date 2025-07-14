@@ -12,7 +12,7 @@
     public class Income
     {   
         public int Id { get; set; }
-        public string Title { get; set; }
+        public string Title { get; set; } = String.Empty;
         public DateTime Date { get; set; }
         public decimal Amount { get; set; }
 

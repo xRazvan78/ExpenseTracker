@@ -1,0 +1,47 @@
+﻿@rendermode InteractiveServer
+@inject IncomeService IncomeService;
+@using ExpenseTracker.Services
+@inject NavigationManager Nav
+@using ExpenseTracker.Components.Data.Models
+
+<div class="income-form">
+
+    <h3>@(IsEditMode ? "Edit Income" : "Add Income")</h3>
+
+    <div style="margin-bottom: 1rem;">
+        <label>Title</label>
+        <input @bind="Income.Title" placeholder="Income title" />
+    </div>
+
+    <div style="margin-bottom: 1rem;">
+        <label>Amount</label>
+        <input type="number" step="0.01" @bind="Income.Amount" />
+    </div>
+
+    <div style="margin-bottom: 1rem;">
+        <label>Date</label>
+        <input type="date" @bind="Income.Date" />
+    </div>
+
+    <div style="margin-bottom: 1rem;">
+        <label>Type</label>
+        <select @bind="Income.Type">
+            @foreach (var type in Enum.GetValues(typeof(IncomeType)))
+            {
+                <option value="@type">@type</option>
+            }
+        </select>
+    </div>
+
+
+    <button @onclick="OnSave">
+        @(IsEditMode ? "Update" : "Save")
+    </button>
+
+</div>
+
+@code {
+    [Parameter] public Income Income { get; set; } = new();
+    [Parameter] public bool IsEditMode { get; set; } = false;
+    [Parameter] public EventCallback OnSave { get; set; }
+}

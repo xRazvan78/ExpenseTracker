@@ -1,0 +1,37 @@
+﻿@page "/incomes/{id:int}"
+@rendermode InteractiveServer
+@inject IncomeService IncomeService
+@inject NavigationManager Nav
+@using ExpenseTracker.Components.Data.Models
+@using ExpenseTracker.Services
+
+
+@if (income != null)
+{
+    <IncomeForm Income="@income"
+                IsEditMode="true"
+                OnSave="SaveChanges" />
+}
+else
+{
+    <p>Income not found.</p>
+}
+
+
+@code {
+    [Parameter] public int id { get; set; }
+    private Income? income;
+
+    protected override void OnInitialized()
+    {
+        income = IncomeService.GetIncomeData(id);
+    }
+
+    void SaveChanges()
+    {
+        income.Date = DateTime.SpecifyKind(income.Date, DateTimeKind.Unspecified);
+
+        IncomeService.UpdateIncomeDetails(income!);
+        Nav.NavigateTo("/incomes");
+    }
+}
