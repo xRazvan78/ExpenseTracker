@@ -7,6 +7,12 @@
 
 <h3>Expenses</h3>
 
+<select @bind="selectedFilter" style="margin-bottom: 1rem;">
+    <option>All</option>
+    <option>Planned</option>
+    <option>Unplanned</option>
+</select>
+
 <table class="table">
 	<thead>
 		<tr>
@@ -27,7 +33,7 @@
         }
         else
         {
-            @foreach (var expense in expenses)
+            @foreach (var expense in FilteredExpenses)
             {
                 <tr>
                     <td>@expense.Category?.Name</td>
@@ -36,23 +42,41 @@
                     <td>@expense.Amount.ToString("C")</td>
                     <td>@expense.Planned.ToString()</td>
                     <td>
-                        <button @onclick="() => EditExpense(expense.Id)">Edit</button>
-                        <button @onclick="() => DeleteExpense(expense.Id)">Delete</button>
+                        <button style="background-color: dodgerblue" @onclick="() => EditExpense(expense.Id)">Edit</button>
+                        <button style="background-color: crimson" @onclick="() => DeleteExpense(expense.Id)">Delete</button>
                     </td>
                 </tr>
             }
         }
 	</tbody>
 </table>
-<button @onclick="NavigateToAddExpense">Add Expense</button>
+<button style="background-color: lawngreen" @onclick="NavigateToAddExpense">Add Expense</button>
+
+<h4>Total Expense</h4>
+<p style="font-size: 1.5rem; color: crimson;">
+    @FilteredExpenses.Sum(e => e.Amount).ToString("C")
+</p>
+
 
 
 @code {
     private List<Expense> expenses = new();
 
+    private string selectedFilter = "All";
+    private List<Expense> allExpenses = new();
+    private List<Expense> FilteredExpenses =>
+        selectedFilter switch
+        {
+            "Planned" => allExpenses.Where(e => e.Planned == PlannedType.Planned).ToList(),
+            "Unplanned" => allExpenses.Where(e => e.Planned == PlannedType.Unplanned).ToList(),
+            _ => allExpenses
+        };
+
+
     protected override void OnInitialized()
     {
         expenses = ExpenseService.GetExpenses(); 
+        allExpenses = ExpenseService.GetExpenses();
     }
 
     void NavigateToAddExpense()
@@ -63,7 +87,7 @@
     void DeleteExpense(int id)
     {
         ExpenseService.DeleteExpense(id);
-        expenses = ExpenseService.GetExpenses();
+        allExpenses = ExpenseService.GetExpenses();
     }
     void EditExpense(int id)
     {

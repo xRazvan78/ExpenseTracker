@@ -2,8 +2,8 @@
 {
     public enum PlannedType
     {
-        Planned = 0,
-        Unplanned = 1
+        Planned,
+        Unplanned
     }
 
     public class Expense

@@ -11,7 +11,7 @@
 	{
 		<li style="margin-bottom: 1rem;">
 			<span>ID: @category.Id | Name: @category.Name</span>
-			<button @onclick="() => DeleteCategory(category.Id)">Delete</button>
+			<button style="background-color:crimson;" @onclick="() => DeleteCategory(category.Id)">Delete</button>
 			<a href="/categories/@category.Id/expenses" style="margin-left: 1rem;">View Expenses</a>
 		</li>
 
@@ -19,7 +19,7 @@
 </ul>
 
 <input @bind="newCategoryName" placeholder="New category name" />
-<button @onclick="AddCategory">Add Category</button>
+<button style="background-color:lawngreen" @onclick="AddCategory">Add Category</button>
 
 @code {
 	private List<Category> categories = new();

@@ -7,6 +7,12 @@
 
 <h3>Incomes</h3>
 
+<div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+	<input type="date" @bind="startDate" />
+	<input type="date" @bind="endDate" />
+	<button @onclick="ApplyFilter">Filter</button>
+</div>
+
 <table class="table">
 	<thead>
 		<tr>
@@ -18,14 +24,14 @@
 		</tr>
 	</thead>
 	<tbody>
-		@if(incomes.Count == 0)
+		@if (filteredIncomes.Count == 0)
 		{
 			<tr>
 				<td colspan="5">No incomes recorded yet.</td>
 			</tr>
 		}
 		else{
-			@foreach(var income in incomes)
+			@foreach(var income in filteredIncomes)
 			{
 				<tr>
 					<td>@income.Title</td>
@@ -33,8 +39,8 @@
 					<td>@income.Amount.ToString("C")</td>
 					<td>@income.Type.ToString()</td>
 					<td>
-						<button @onclick="() => EditIncome(income.Id)">Edit</button>
-						<button @onclick="() => DeleteIncome(income.Id)">Delete</button>
+						<button style="background-color: dodgerblue" @onclick="() => EditIncome(income.Id)">Edit</button>
+						<button style="background-color: crimson " @onclick="() => DeleteIncome(income.Id)">Delete</button>
 					</td>
 
 				</tr>
@@ -44,15 +50,31 @@
 
 	</tbody>
 </table>
-<button @onclick="NavigateToAddIncome">Add Income</button>
+<button style="background-color: lawngreen" @onclick="NavigateToAddIncome">Add Income</button>
+
+<h4>Total Income</h4>
+<p style="font-size: 1.5rem; color: lawngreen">
+	@filteredIncomes.Sum(i => i.Amount).ToString("C")
+</p>
+
 
 @code {
 
+	private DateTime? startDate;
+	private DateTime? endDate;
+
 	private List<Income> incomes = new();
+
+	private List<Income> allIncomes = new();
+	private List<Income> filteredIncomes = new();
+
 
 	protected override void OnInitialized()
 	{
 		incomes = IncomeService.GetIncomes();
+		allIncomes = IncomeService.GetIncomes();
+		filteredIncomes = allIncomes;
+
 	}
 
 	void NavigateToAddIncome()
@@ -63,12 +85,21 @@
 	void DeleteIncome(int id)
 	{
 		IncomeService.DeleteIncome(id);
-		incomes = IncomeService.GetIncomes();
+		allIncomes = IncomeService.GetIncomes();
 	}
 
 	void EditIncome(int id)
 	{
 		Nav.NavigateTo($"/incomes/{id}");
 	}
+
+	void ApplyFilter()
+	{
+		filteredIncomes = allIncomes.Where(i =>
+			(startDate == null || i.Date >= startDate) &&
+			(endDate == null || i.Date <= endDate)
+		).ToList();
+	}
+
 
 }
