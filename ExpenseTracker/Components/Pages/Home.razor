@@ -40,6 +40,14 @@
 		<h4 style="color: red">Unplanned Expenses</h4>
 		<p style=" font-size: 2rem;">@totalUnplannedExpenses.ToString("C")</p>
 	</div>
+
+	<div>
+		<h4 style="color : midnightblue">Savings Rate</h4>
+		<p style="font-size: 2rem; color:@(savingsRate >= 0 ? "green" : "red")">
+			@savingsRate.ToString("0.##")%
+		</p>
+
+	</div>
 </div>
 
 
@@ -56,6 +64,7 @@
 	private decimal balance;
 	private decimal totalPlannedExpenses;
 	private decimal totalUnplannedExpenses;
+	private decimal savingsRate;
 
 	private DateTime firstIncomeDate;
 	private DateTime lastIncomeDate;
@@ -102,7 +111,7 @@
 			lastExpenseDate = sort.Last().Date;
 		}
 
-		
+		savingsRate = totalIncome > 0 ? ((totalIncome - totalExpense) / totalIncome) * 100 : 0;
 
 
 	}
